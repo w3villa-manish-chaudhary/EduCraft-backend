@@ -1,5 +1,10 @@
+const {executeRawQuery} = require('../database/dbConfig');
+
 const hello = async (req, res, next) => {
-    console.log("hello i am home page:::::>>>>>");   
+    console.log("hello i am home page:::::>>>>>"); 
+    const response = await executeRawQuery("SELECT 2*3 AS result;");
+    console.log("::::::::::::::", response);
+
     res.send("<h1>Hello! this is a home page.</h1>");
 }
 

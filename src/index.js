@@ -3,6 +3,8 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const morgan = require('morgan');
 const routes = require("./routes/index")
+const {initializeDatabase} = require('../src/database/dbConfig');
+
 
 
 
@@ -17,6 +19,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
+
+
+
+initializeDatabase();
+
 
 
 app.use("/", routes)
