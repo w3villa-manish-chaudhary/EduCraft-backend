@@ -1,8 +1,8 @@
 const { Sequelize } = require('sequelize');
 
-const sequelize = new Sequelize('testpostnode', 'postgres', '1122334455', {
+const sequelize = new Sequelize('testsqlnode', 'root', '1122334455', {
     host: 'localhost',
-    dialect: 'postgres',
+    dialect: 'mysql',
     logging: false 
 });
 
@@ -20,13 +20,13 @@ async function executeRawQuery(query, replacements = {}) {
     try {
         const [results] = await sequelize.query(query, {
             replacements,
-            type: Sequelize.QueryTypes.SELECT // Specify the query type
+            type: Sequelize.QueryTypes.SELECT
         });
 
         return results;
     } catch (error) {
         console.error("Error in executeRawQuery:", error);
-        throw error; // Rethrow the error to be handled by the caller
+        throw error;
     }
 }
 
