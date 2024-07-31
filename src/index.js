@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const morgan = require('morgan');
 const routes = require("./routes/index")
-const {initializeDatabase} = require('../src/database/dbConfig');
+const {initializeDatabase} = require('./database/dbconfig');
 
 
 
