@@ -19,8 +19,7 @@ async function initializeDatabase() {
 async function executeRawQuery(query, replacements = {}) {
     try {
         const [results] = await sequelize.query(query, {
-            replacements,
-            type: Sequelize.QueryTypes.SELECT
+            replacements
         });
 
         return results;
