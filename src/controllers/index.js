@@ -1,12 +1,15 @@
-const {executeRawQuery} = require('../database/dbconfig');
+const Users = require('../database/models/user.model');
 
 const hello = async (req, res, next) => {
-    console.log("hello i am home page:::::>>>>>"); 
-    const response = await executeRawQuery("SELECT 2*4 AS result;");
-    console.log("::::::::::::::", response);
+  try {
+    console.log("hello i am home page:::::>>>>>");
 
-    res.send("<h1>Hello! this is a home page.</h1>");
+    const results = await Users.findAll( );
+
+    res.send(results);
+  } catch (error) {
+    next(error); 
+  }
 }
 
 module.exports = hello;
-

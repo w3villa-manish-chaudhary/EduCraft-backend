@@ -3,8 +3,10 @@ const { DataTypes } = require('sequelize');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Users', {
+  async up (queryInterface, Sequelize) {
+   
+     await queryInterface.createTable('emailVerifiaction', { 
+      
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -24,22 +26,7 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
         allowNull: false,
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      mobileNumber: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      password: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
+
       isActive: {
         allowNull: true,
         type: Sequelize.BOOLEAN
@@ -47,10 +34,33 @@ module.exports = {
       comment: {
         allowNull: true,
         type: Sequelize.STRING
+      },
+      emailReceiver: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+      },
+      verificationHash: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+      },
+      retryCount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+      },
+      userData: {
+        type: DataTypes.TEXT,
+        allowNull: true
+      },
+      assignUser: {
+        type: DataTypes.INTEGER,
+        allowNull: true
       }
-    });
+     });
+     
   },
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Users');
+
+  async down (queryInterface, Sequelize) {
+    
+     await queryInterface.dropTable('emailVerifiaction');
   }
 };

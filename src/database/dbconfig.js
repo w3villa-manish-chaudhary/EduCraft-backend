@@ -29,4 +29,4 @@ async function executeRawQuery(query, replacements = {}) {
     }
 }
 
-module.exports = { initializeDatabase, executeRawQuery };
+module.exports = { initializeDatabase, executeRawQuery , sequelize};
