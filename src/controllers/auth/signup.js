@@ -41,7 +41,7 @@ exports.createUser = async (req, res) => {
         const token = jwt.sign({ uniqueId }, JWT_SECRET_KEY, { expiresIn: '1h' });
 
         // Send OTP
-        // await sendOTP(phone, otp);
+        await sendOTP(phone, otp);
         const now = Date.now(); 
         const otpCreatedAt = now;
         const otpExpiredAt = now + 10 * 60 * 1000; 

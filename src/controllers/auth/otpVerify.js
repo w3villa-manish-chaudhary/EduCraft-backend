@@ -1,3 +1,4 @@
+'use client'
 const { executeRawQuery } = require('../../database/dbconfig');
 const { QueryTypes } = require('sequelize');
 
@@ -11,7 +12,7 @@ const otpVerify = async (req, res) => {
             return res.status(400).json({ message: 'Phone number and OTP are required' });
         }
 
-        console.log(">::::::::::::::::::::::", otp);
+        console.log(">::::::::::input_otp::::::::::::", otp);
 
         const query = `
             SELECT * FROM otpVerification 
@@ -26,10 +27,9 @@ const otpVerify = async (req, res) => {
             return res.status(404).json({ message: 'No OTP record found for this phone number' });
         }
 
-        console.log(">::::::::::::::::::::::", otpRecord.verificationOtp);
+        console.log(">::::::::otpRecord::::::::::::::", otpRecord.verificationOtp);
 
-        const currentTime = Math.floor(Date.now() / 1000); // Current time in epoch
-        console.log(">>>>>>>>>>>>>>>>>>>>>>>",currentTime );
+        const currentTime = Math.floor(Date.now() / 1000);
         
 
         if (currentTime > otpRecord.otpExpiredAt) {
@@ -37,7 +37,7 @@ const otpVerify = async (req, res) => {
         }
 
         if (otpRecord.verificationOtp == otp) {
-            console.log("::::::::::::correct otp");
+            console.log("::::::::::::correct otp:::::::::::::");
 
             // Update User table
             const updateUserQuery = `
