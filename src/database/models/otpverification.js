@@ -30,13 +30,15 @@ otpVerification.init({
     type: DataTypes.INTEGER,
     allowNull: true
   },
+  otpCreatedAt:{
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
 
-  
-
-
-
-
-
+  },
+  otpUpdatedAt:{
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
 
 }, {
   sequelize,

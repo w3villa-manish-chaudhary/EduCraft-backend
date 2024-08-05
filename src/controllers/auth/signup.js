@@ -15,12 +15,31 @@ exports.createUser = async (req, res) => {
     try {
         const { name, email, phone, password, isActive, comment } = req.body;
 
+        // Check if email already exists
+        const emailCheckQuery = `
+            SELECT email FROM Users WHERE email = :email
+        `;
+        const emailExists = await executeRawQuery(emailCheckQuery, { email }, QueryTypes.SELECT);
+
+        if (emailExists.length > 0) {
+            return res.status(400).json({ message: 'Email already registered' });
+        }
+
+        // Check if phone number already exists
+        const phoneCheckQuery = `
+            SELECT mobileNumber FROM Users WHERE mobileNumber = :phone
+        `;
+        const phoneExists = await executeRawQuery(phoneCheckQuery, { phone }, QueryTypes.SELECT);
+
+        if (phoneExists.length > 0) {
+            return res.status(400).json({ message: 'Phone number already registered' });
+        }
+
         const uniqueId = uuidv4();
         const hashedPassword = await argon2.hash(password);
         const otp = generateOTP();
         const timestamp = new Date();
         
-
         // Insert new user
         const userQuery = `
             INSERT INTO Users (uniqueId, name, email, mobileNumber, password, isActive, comment, createdAt, updatedAt)
@@ -41,7 +60,7 @@ exports.createUser = async (req, res) => {
         const token = jwt.sign({ uniqueId }, JWT_SECRET_KEY, { expiresIn: '1h' });
 
         // Send OTP
-        await sendOTP(phone, otp);
+        // await sendOTP(phone, otp);
         const now = Date.now(); 
         const otpCreatedAt = now;
         const otpExpiredAt = now + 10 * 60 * 1000; 
