@@ -27,6 +27,17 @@ class Users extends BaseModel {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    isMobileVerify: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      defaultValue: false,
+    },
+    isEmailVerify: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      defaultValue: false,
+    }
+
   }, {
     sequelize,
     modelName: 'Users',

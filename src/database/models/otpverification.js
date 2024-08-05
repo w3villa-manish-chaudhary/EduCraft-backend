@@ -29,7 +29,15 @@ otpVerification.init({
   assignUser: {
     type: DataTypes.INTEGER,
     allowNull: true
-  }
+  },
+
+  
+
+
+
+
+
+
 }, {
   sequelize,
   modelName: 'otpVerification',

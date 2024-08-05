@@ -1,39 +1,71 @@
 const { executeRawQuery } = require('../../database/dbconfig');
 const { v4: uuidv4 } = require('uuid');
 const { QueryTypes } = require('sequelize');
-const argon2 = require('argon2'); 
+const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
+const { sendOTP } = require('../../services/otpService');
 
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;  
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
+const generateOTP = () => {
+    return Math.floor(1000 + Math.random() * 9000).toString();
+};
 
 exports.createUser = async (req, res) => {
     try {
         const { name, email, phone, password, isActive, comment } = req.body;
 
         const uniqueId = uuidv4();
-        // >>>>>>>>>>>>>>>>>>Hash password  by  using argon2
         const hashedPassword = await argon2.hash(password);
+        const otp = generateOTP();
+        const timestamp = new Date();
+        
 
-        const query = `
+        // Insert new user
+        const userQuery = `
             INSERT INTO Users (uniqueId, name, email, mobileNumber, password, isActive, comment, createdAt, updatedAt)
-            VALUES (:uniqueId, :name, :email, :mobileNumber, :password, :isActive, :comment, NOW(), NOW())
+            VALUES (:uniqueId, :name, :email, :mobileNumber, :password, :isActive, :comment, :timestamp, :timestamp)
         `;
 
-        await executeRawQuery(query, {
+        await executeRawQuery(userQuery, {
             uniqueId,
             name,
             email,
             mobileNumber: phone,
             password: hashedPassword,
             isActive: isActive !== undefined ? isActive : null,
-            comment: comment || null
+            comment: comment || null,
+            timestamp
         }, QueryTypes.INSERT);
 
-        // Generate JWT token
-        const token = jwt.sign({ uniqueId }, JWT_SECRET_KEY , { expiresIn: '1h' });
+        const token = jwt.sign({ uniqueId }, JWT_SECRET_KEY, { expiresIn: '1h' });
 
-        res.status(201).json({ message: 'User created successfully', token});
+        // Send OTP
+        // await sendOTP(phone, otp);
+        const now = Date.now(); 
+        const otpCreatedAt = now;
+        const otpExpiredAt = now + 10 * 60 * 1000; 
+
+        const otpQuery = `
+            INSERT INTO otpVerification (uniqueId, otpReceiver, verificationOtp, createdAt, updatedAt, otpCreatedAt, otpExpiredAt)
+            VALUES (:uniqueId, :otpReceiver, :verificationOtp, :timestamp, :timestamp, :otpCreatedAt, :otpExpiredAt)
+        `;
+
+        await executeRawQuery(otpQuery, {
+            uniqueId: uuidv4(),
+            otpReceiver: phone,
+            verificationOtp: otp,
+            timestamp,
+            otpCreatedAt,
+            otpExpiredAt
+        }, QueryTypes.INSERT);
+
+        res.status(201).json({ 
+            message: 'User created successfully. OTP sent and saved.', 
+            token,
+            otpCreatedAt,
+            otpExpiredAt
+        });
     } catch (error) {
         console.error('Error creating user:', error);
         res.status(500).json({ message: 'Error creating user', error: error.message });

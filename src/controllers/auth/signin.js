@@ -6,6 +6,8 @@ const { QueryTypes } = require('sequelize');
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;  
 
 
+
+
 exports.signin = async (req, res) => {
     try {
         const { email, password } = req.body;
