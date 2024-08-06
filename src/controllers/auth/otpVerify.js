@@ -47,7 +47,7 @@ const otpVerify = async (req, res) => {
 
             await executeRawQuery(updateUserQuery, { phone }, QueryTypes.UPDATE);
 
-            return res.status(200).json({ message: 'OTP verified successfully and user updated' });
+            return res.status(200).json({ message: 'OTP verified successfully and user updated'});
         } else {
             return res.status(400).json({ message: 'Invalid OTP' });
         }

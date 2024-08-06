@@ -38,7 +38,7 @@ exports.sendEmail = async (toemail) => {
       emailExpiredAt
     }, QueryTypes.INSERT);
 
-    const verificationLink = `http://localhost:3000/verify/${token}`;
+    const verificationLink = `http://localhost:3000/emailverify/${token}`;
 
     let mailOptions = {
       from: '"EduCraft" <EduCraft@gmail.com>',
