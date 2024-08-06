@@ -30,7 +30,17 @@ emailVerification.init({
   assignUser: {
     type: DataTypes.INTEGER,
     allowNull: true
-  }
+  },
+
+  emailCreatedAt:{
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+
+  },
+  emailUpdatedAt:{
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
 }, {
   sequelize,
   modelName: 'emailVerification',

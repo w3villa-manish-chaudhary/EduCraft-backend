@@ -4,6 +4,7 @@ const { QueryTypes } = require('sequelize');
 const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
 const { sendOTP } = require('../../services/otpService');
+const { sendEmail } = require('../../services/emailService');
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
@@ -16,24 +17,24 @@ exports.createUser = async (req, res) => {
         const { name, email, phone, password, isActive, comment } = req.body;
 
         // Check if email already exists
-        const emailCheckQuery = `
-            SELECT email FROM Users WHERE email = :email
-        `;
-        const emailExists = await executeRawQuery(emailCheckQuery, { email }, QueryTypes.SELECT);
+        // const emailCheckQuery = `
+        //     SELECT email FROM Users WHERE email = :email
+        // `;
+        // const emailExists = await executeRawQuery(emailCheckQuery, { email }, QueryTypes.SELECT);
 
-        if (emailExists.length > 0) {
-            return res.status(400).json({ message: 'Email already registered' });
-        }
+        // if (emailExists.length > 0) {
+        //     return res.status(400).json({ message: 'Email already registered' });
+        // }
 
-        // Check if phone number already exists
-        const phoneCheckQuery = `
-            SELECT mobileNumber FROM Users WHERE mobileNumber = :phone
-        `;
-        const phoneExists = await executeRawQuery(phoneCheckQuery, { phone }, QueryTypes.SELECT);
+        // // Check if phone number already exists
+        // const phoneCheckQuery = `
+        //     SELECT mobileNumber FROM Users WHERE mobileNumber = :phone
+        // `;
+        // const phoneExists = await executeRawQuery(phoneCheckQuery, { phone }, QueryTypes.SELECT);
 
-        if (phoneExists.length > 0) {
-            return res.status(400).json({ message: 'Phone number already registered' });
-        }
+        // if (phoneExists.length > 0) {
+        //     return res.status(400).json({ message: 'Phone number already registered' });
+        // }
 
         const uniqueId = uuidv4();
         const hashedPassword = await argon2.hash(password);
@@ -61,6 +62,12 @@ exports.createUser = async (req, res) => {
 
         // Send OTP
         // await sendOTP(phone, otp);
+
+
+        //Send  email
+        sendEmail(email)
+
+
         const now = Date.now(); 
         const otpCreatedAt = now;
         const otpExpiredAt = now + 10 * 60 * 1000; 

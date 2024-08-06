@@ -1,4 +1,3 @@
-'use client'
 const { executeRawQuery } = require('../../database/dbconfig');
 const { QueryTypes } = require('sequelize');
 
