@@ -16,31 +16,29 @@ exports.createUser = async (req, res) => {
     try {
         const { name, email, phone, password, isActive, comment } = req.body;
 
-        // Check if email already exists
         const emailCheckQuery = `
-            SELECT email FROM Users WHERE email = :email
-        `;
-        const emailExists = await executeRawQuery(emailCheckQuery, { email }, QueryTypes.SELECT);
+    SELECT email, isEmailVerify FROM Users WHERE email = :email
+`;
+        const emailResult = await executeRawQuery(emailCheckQuery, { email }, QueryTypes.SELECT);
 
-        if (emailExists.length > 0) {
-            return res.status(400).json({ message: 'Email already registered' });
+        if (emailResult.length > 0 && emailResult[0].isEmailVerify === 1) {
+            return res.status(400).json({ message: 'Email already registered and verified' });
         }
 
-        // Check if phone number already exists
         const phoneCheckQuery = `
-            SELECT mobileNumber FROM Users WHERE mobileNumber = :phone
-        `;
-        const phoneExists = await executeRawQuery(phoneCheckQuery, { phone }, QueryTypes.SELECT);
+    SELECT mobileNumber, isMobileVerify FROM Users WHERE mobileNumber = :phone
+`;
+        const phoneResult = await executeRawQuery(phoneCheckQuery, { phone }, QueryTypes.SELECT);
 
-        if (phoneExists.length > 0) {
-            return res.status(400).json({ message: 'Phone number already registered' });
+        if (phoneResult.length > 0 && phoneResult[0].isMobileVerify === 1) {
+            return res.status(400).json({ message: 'Phone number already registered and verified' });
         }
 
         const uniqueId = uuidv4();
         const hashedPassword = await argon2.hash(password);
         const otp = generateOTP();
         const timestamp = new Date();
-        
+
         // Insert new user
         const userQuery = `
             INSERT INTO Users (uniqueId, name, email, mobileNumber, password, isActive, comment, createdAt, updatedAt)
@@ -68,9 +66,9 @@ exports.createUser = async (req, res) => {
         sendEmail(email)
 
 
-        const now = Date.now(); 
+        const now = Date.now();
         const otpCreatedAt = now;
-        const otpExpiredAt = now + 10 * 60 * 1000; 
+        const otpExpiredAt = now + 10 * 60 * 1000;
 
         const otpQuery = `
             INSERT INTO otpVerification (uniqueId, otpReceiver, verificationOtp, createdAt, updatedAt, otpCreatedAt, otpExpiredAt)
@@ -86,8 +84,8 @@ exports.createUser = async (req, res) => {
             otpExpiredAt
         }, QueryTypes.INSERT);
 
-        res.status(201).json({ 
-            message: 'User created successfully. OTP sent and saved.', 
+        res.status(201).json({
+            message: 'User created successfully. OTP sent and saved.',
             token,
             otpCreatedAt,
             otpExpiredAt
