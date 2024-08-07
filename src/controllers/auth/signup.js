@@ -1,4 +1,5 @@
-const { executeRawQuery } = require('../../database/dbconfig');
+const {executeRawQuery} = require('../../database/dbconfig');
+const Users = require('../../database/models/user.model');
 const { v4: uuidv4 } = require('uuid');
 const { QueryTypes } = require('sequelize');
 const argon2 = require('argon2');
@@ -16,21 +17,25 @@ exports.createUser = async (req, res) => {
     try {
         const { name, email, phone, password, isActive, comment } = req.body;
 
-        const emailCheckQuery = `
-    SELECT email, isEmailVerify FROM Users WHERE email = :email
-`;
-        const emailResult = await executeRawQuery(emailCheckQuery, { email }, QueryTypes.SELECT);
 
-        if (emailResult.length > 0 && emailResult[0].isEmailVerify === 1) {
+        const emailResult = await Users.findOne({
+            attributes: ['email', 'isEmailVerify'],
+            where: { email },
+        });
+
+        console.log("::::::::::::::>>>>?????????,", emailResult );
+        
+
+        if (emailResult && emailResult.isEmailVerify === true) {
             return res.status(400).json({ message: 'Email already registered and verified' });
         }
 
-        const phoneCheckQuery = `
-    SELECT mobileNumber, isMobileVerify FROM Users WHERE mobileNumber = :phone
-`;
-        const phoneResult = await executeRawQuery(phoneCheckQuery, { phone }, QueryTypes.SELECT);
+        const phoneResult = await Users.findOne({
+            attributes: ['mobileNumber', 'isMobileVerify'],
+            where: { mobileNumber: phone },
+        });
 
-        if (phoneResult.length > 0 && phoneResult[0].isMobileVerify === 1) {
+        if (phoneResult && phoneResult.isMobileVerify === true) {
             return res.status(400).json({ message: 'Phone number already registered and verified' });
         }
 
