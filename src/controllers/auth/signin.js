@@ -2,6 +2,7 @@ const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
 const { executeRawQuery } = require('../../database/dbconfig');
 const { QueryTypes } = require('sequelize');
+const { loginQuery } = require('../../config/nativeQuery/nativeQuery.json');
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;  
 
@@ -16,8 +17,8 @@ exports.signin = async (req, res) => {
             return res.status(400).json({ message: 'Email and password are required' });
         }
 
-        const query = 'SELECT * FROM Users WHERE email = :email';
-        const [user] = await executeRawQuery(query, { email }, QueryTypes.SELECT);
+
+        const [user] = await executeRawQuery(loginQuery, { email }, QueryTypes.SELECT);
 
         if (!user) {
             return res.status(401).json({ message: 'Invalid credentials' });

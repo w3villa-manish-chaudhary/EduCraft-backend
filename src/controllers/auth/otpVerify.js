@@ -1,5 +1,6 @@
 const { executeRawQuery } = require('../../database/dbconfig');
 const { QueryTypes } = require('sequelize');
+const { updateMobileUserQuery , getquery} = require('../../config/nativeQuery/nativeQuery.json')
 
 const otpVerify = async (req, res) => {
     console.log("OTP Verification started");
@@ -13,14 +14,8 @@ const otpVerify = async (req, res) => {
 
         console.log(">::::::::::input_otp::::::::::::", otp);
 
-        const query = `
-            SELECT * FROM otpVerification 
-            WHERE otpReceiver = :phone
-            ORDER BY otpCreatedAt DESC 
-            LIMIT 1
-        `;
         
-        const [otpRecord] = await executeRawQuery(query, { phone }, QueryTypes.SELECT);
+        const [otpRecord] = await executeRawQuery(getquery, { phone }, QueryTypes.SELECT);
 
         if (!otpRecord) {
             return res.status(404).json({ message: 'No OTP record found for this phone number' });
@@ -38,14 +33,8 @@ const otpVerify = async (req, res) => {
         if (otpRecord.verificationOtp == otp) {
             console.log("::::::::::::correct otp:::::::::::::");
 
-            // Update User table
-            const updateUserQuery = `
-                UPDATE Users 
-                SET isMobileVerify = true 
-                WHERE mobileNumber = :phone
-            `;
-
-            await executeRawQuery(updateUserQuery, { phone }, QueryTypes.UPDATE);
+            
+            await executeRawQuery(updateMobileUserQuery, { phone }, QueryTypes.UPDATE);
 
             return res.status(200).json({ message: 'OTP verified successfully and user updated'});
         } else {

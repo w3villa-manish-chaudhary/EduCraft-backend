@@ -1,5 +1,6 @@
 const { executeRawQuery } = require('../../database/dbconfig');
 const { QueryTypes } = require('sequelize');
+const {updateEmailUserQuery , emailVerificationCheck} = require('../../config/nativeQuery/nativeQuery.json')
 
 const emailVerify = async (req, res) => {
   console.log(">>>>>>>>>>>>>hello in emailVerify<<<<<<<<<<<<<>>>>>>>>");
@@ -10,13 +11,9 @@ const emailVerify = async (req, res) => {
 
 
 
-    const query = `
-      SELECT * FROM emailVerification 
-      WHERE verificationHash = :token 
-      AND emailExpiredAt > :currentTime
-    `;
 
-    const [verificationRecord] = await executeRawQuery(query, {
+
+    const [verificationRecord] = await executeRawQuery(emailVerificationCheck, {
       token,
       currentTime: Date.now()
     }, QueryTypes.SELECT);
@@ -28,13 +25,9 @@ const emailVerify = async (req, res) => {
     console.log(">>>>>>>>>>>>>>>>>>>>>>>>from DB", verificationRecord.verificationHash);
     console.log("Email to verify:", verificationRecord.emailReceiver);
 
-    const updateUserQuery = `
-      UPDATE Users 
-      SET isEmailVerify = 1 
-      WHERE email = :email
-    `;
 
-    const updateResult = await executeRawQuery(updateUserQuery, 
+
+    const updateResult = await executeRawQuery(updateEmailUserQuery, 
       { email: verificationRecord.emailReceiver }, 
       QueryTypes.UPDATE
     );

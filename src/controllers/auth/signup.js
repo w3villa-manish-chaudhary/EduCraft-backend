@@ -6,6 +6,7 @@ const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
 const { sendOTP } = require('../../services/otpService');
 const { sendEmail } = require('../../services/emailService');
+const {insertUserQuery , otpQuery} = require('../../config/nativeQuery/nativeQuery.json')
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
@@ -44,13 +45,9 @@ exports.createUser = async (req, res) => {
         const otp = generateOTP();
         const timestamp = new Date();
 
-        // Insert new user
-        const userQuery = `
-            INSERT INTO Users (uniqueId, name, email, mobileNumber, password, isActive, comment, createdAt, updatedAt)
-            VALUES (:uniqueId, :name, :email, :mobileNumber, :password, :isActive, :comment, :timestamp, :timestamp)
-        `;
+       
 
-        await executeRawQuery(userQuery, {
+        await executeRawQuery(insertUserQuery, {
             uniqueId,
             name,
             email,
@@ -64,7 +61,7 @@ exports.createUser = async (req, res) => {
         const token = jwt.sign({ uniqueId }, JWT_SECRET_KEY, { expiresIn: '1h' });
 
         //Send OTP
-        // await sendOTP(phone, otp);
+        await sendOTP(phone, otp);
 
 
         // Send  email
@@ -75,10 +72,6 @@ exports.createUser = async (req, res) => {
         const otpCreatedAt = now;
         const otpExpiredAt = now + 10 * 60 * 1000;
 
-        const otpQuery = `
-            INSERT INTO otpVerification (uniqueId, otpReceiver, verificationOtp, createdAt, updatedAt, otpCreatedAt, otpExpiredAt)
-            VALUES (:uniqueId, :otpReceiver, :verificationOtp, :timestamp, :timestamp, :otpCreatedAt, :otpExpiredAt)
-        `;
 
         await executeRawQuery(otpQuery, {
             uniqueId: uuidv4(),
