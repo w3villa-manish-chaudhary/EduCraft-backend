@@ -1,10 +1,11 @@
 {
     "loginQuery": "SELECT * FROM Users WHERE email = :email",
     "insertUserQuery": "INSERT INTO Users (uniqueId, name, email, mobileNumber, password, isActive, comment, createdAt, updatedAt) VALUES (:uniqueId, :name, :email, :mobileNumber, :password, :isActive, :comment, :timestamp, :timestamp)",
-    "otpQuery" : "INSERT INTO otpVerification (uniqueId, otpReceiver, verificationOtp, createdAt, updatedAt, otpCreatedAt, otpExpiredAt) VALUES (:uniqueId, :otpReceiver, :verificationOtp, :timestamp, :timestamp, :otpCreatedAt, :otpExpiredAt)",
-    "updateMobileUserQuery" : "UPDATE Users SET isMobileVerify = true WHERE mobileNumber = :phone",
+    "otpQuery": "INSERT INTO otpVerification (uniqueId, otpReceiver, verificationOtp, createdAt, updatedAt, otpCreatedAt, otpExpiredAt) VALUES (:uniqueId, :otpReceiver, :verificationOtp, :timestamp, :timestamp, :otpCreatedAt, :otpExpiredAt)",
+    "updateMobileUserQuery": "UPDATE Users SET isMobileVerify = true WHERE mobileNumber = :phone",
     "getquery": "SELECT * FROM otpVerification WHERE otpReceiver = :phone ORDER BY otpCreatedAt DESC LIMIT 1",
-    "updateEmailUserQuery": "UPDATE Users SET isEmailVerify = 1 WHERE email = :email",
-    "emailVerificationCheck": "SELECT * FROM emailVerification WHERE verificationHash = :token AND emailExpiredAt > :currentTime"
-
+    "updateEmailUserQuery": "UPDATE Users SET isEmailVerify = 1 , isActive = 1  WHERE email = :email",
+    "emailVerificationCheck": "SELECT * FROM emailVerification WHERE verificationHash = :token AND emailExpiredAt > :currentTime",
+    "setMobileNumber": "UPDATE Users SET mobileNumber = :mobileNumber WHERE id = (SELECT id FROM Users ORDER BY id DESC LIMIT 1)",
+    "updateMobileNumberQuery": "UPDATE Users SET mobileNumber = :mobileNumber WHERE id = (SELECT id FROM (SELECT id FROM Users ORDER BY id DESC LIMIT 1) AS temp)"
 }

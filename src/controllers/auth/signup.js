@@ -53,7 +53,7 @@ exports.createUser = async (req, res) => {
             email,
             mobileNumber: phone,
             password: hashedPassword,
-            isActive: isActive !== undefined ? isActive : null,
+            isActive: false,
             comment: comment || null,
             timestamp
         }, QueryTypes.INSERT);
@@ -61,7 +61,7 @@ exports.createUser = async (req, res) => {
         const token = jwt.sign({ uniqueId }, JWT_SECRET_KEY, { expiresIn: '1h' });
 
         //Send OTP
-        await sendOTP(phone, otp);
+        // await sendOTP(phone, otp);
 
 
         // Send  email

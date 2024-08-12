@@ -6,7 +6,7 @@ const BaseModel = require('./base.model');
 
 class Users extends BaseModel {
     static associate(models) {
-      // define association here
+     
     }
   }
 
@@ -21,7 +21,7 @@ class Users extends BaseModel {
     },
     mobileNumber: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     password: {
       type: DataTypes.STRING,
@@ -41,6 +41,7 @@ class Users extends BaseModel {
   }, {
     sequelize,
     modelName: 'Users',
+    timestamps: true
   });
 
 
