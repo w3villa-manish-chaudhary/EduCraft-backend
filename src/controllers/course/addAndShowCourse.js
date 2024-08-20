@@ -1,8 +1,5 @@
-const express = require('express');
-const router = express.Router();
 const CourseDetails = require('../../database/models/courseDetails'); 
 
-// POST route to create a new course
 const addcourse = async (req, res) => {
   try {
     const {
@@ -16,7 +13,7 @@ const addcourse = async (req, res) => {
       rating
     } = req.body;
 
-    // Create a new course entry
+    
     const newCourse = await CourseDetails.create({
       course_name,
       description,
@@ -40,4 +37,27 @@ const addcourse = async (req, res) => {
   }
 };
 
-module.exports = addcourse;
+
+
+
+const showallcourse = async (req, res) => {
+  try {
+    
+    const courses = await CourseDetails.findAll();
+
+    res.status(200).json({
+      message: 'Courses retrieved successfully!',
+      data: courses
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error retrieving courses',
+      error: error.message
+    });
+  }
+};
+
+module.exports = {
+  addcourse,
+  showallcourse
+};
