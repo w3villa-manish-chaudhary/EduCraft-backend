@@ -3,6 +3,7 @@ const nodemailer = require("nodemailer");
 const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
 const { QueryTypes } = require('sequelize');
+const { emailQuery } = require("../config/nativeQuery/nativeQuery.json")
 
 exports.sendEmail = async (toemail) => {
   try {
@@ -24,10 +25,6 @@ exports.sendEmail = async (toemail) => {
     const emailExpiredAt = now + 10 * 60 * 1000;
     const timestamp = new Date();
 
-    const emailQuery = `
-      INSERT INTO emailVerification (uniqueId, emailReceiver, verificationHash, createdAt, updatedAt, emailCreatedAt, emailExpiredAt)
-      VALUES (:uniqueId, :emailReceiver, :verificationHash, :timestamp, :timestamp, :emailCreatedAt, :emailExpiredAt)
-    `;
 
     await executeRawQuery(emailQuery, {
       uniqueId: uuidv4(),
@@ -38,7 +35,7 @@ exports.sendEmail = async (toemail) => {
       emailExpiredAt
     }, QueryTypes.INSERT);
 
-    const verificationLink = `http://localhost:3000/emailverify/${token}`;
+    const verificationLink = `${process.env.FRONTEND_URL}/emailverify/${token}`;
 
     let mailOptions = {
       from: '"EduCraft" <EduCraft@gmail.com>',

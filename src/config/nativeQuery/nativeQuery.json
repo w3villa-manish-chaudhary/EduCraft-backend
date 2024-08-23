@@ -7,5 +7,6 @@
     "updateEmailUserQuery": "UPDATE Users SET isEmailVerify = 1 , isActive = 1  WHERE email = :email",
     "emailVerificationCheck": "SELECT * FROM emailVerification WHERE verificationHash = :token AND emailExpiredAt > :currentTime",
     "setMobileNumber": "UPDATE Users SET mobileNumber = :mobileNumber WHERE id = (SELECT id FROM Users ORDER BY id DESC LIMIT 1)",
-    "updateMobileNumberQuery": "UPDATE Users SET mobileNumber = :mobileNumber WHERE id = (SELECT id FROM (SELECT id FROM Users ORDER BY id DESC LIMIT 1) AS temp)"
+    "updateMobileNumberQuery": "UPDATE Users SET mobileNumber = :mobileNumber WHERE id = (SELECT id FROM (SELECT id FROM Users ORDER BY id DESC LIMIT 1) AS temp)",
+    "emailQuery": "INSERT INTO emailVerification (uniqueId, emailReceiver, verificationHash, createdAt, updatedAt, emailCreatedAt, emailExpiredAt)VALUES (:uniqueId, :emailReceiver, :verificationHash, :timestamp, :timestamp, :emailCreatedAt, :emailExpiredAt)"
 }

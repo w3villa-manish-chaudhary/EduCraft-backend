@@ -25,6 +25,7 @@
     "passport-github2": "^0.1.12",
     "passport-google-oauth20": "^2.0.0",
     "sequelizer": "^1.1.4",
+    "stripe": "^16.8.0",
     "twilio": "^5.2.2"
   },
   "devDependencies": {
