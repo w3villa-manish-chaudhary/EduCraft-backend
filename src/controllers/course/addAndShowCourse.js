@@ -10,7 +10,10 @@ const addcourse = async (req, res) => {
       end_date,
       category,
       price,
-      rating
+      rating,
+      trainer,
+      oldprice,
+      rating_count
     } = req.body;
 
     
@@ -22,7 +25,10 @@ const addcourse = async (req, res) => {
       end_date,
       category,
       price,
-      rating
+      rating,
+      trainer,
+      oldprice,
+      rating_count
     });
 
     res.status(201).json({
