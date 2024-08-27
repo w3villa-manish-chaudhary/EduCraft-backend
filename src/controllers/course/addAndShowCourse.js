@@ -63,7 +63,41 @@ const showallcourse = async (req, res) => {
   }
 };
 
+
+
+
+
+
+
+const fetchByUniqueId = async (req, res) => {
+  const { uniqueId } = req.params; 
+
+  console.log(":::::::::::::::::::::::>>>>>>>>>>>>>",uniqueId);
+
+  try {
+    const Details = await CourseDetails.findOne({
+      where: { uniqueId: uniqueId }
+    });
+
+    if (!Details) {
+      return res.status(404).json({ message: 'CourseDetails not found' });
+    }
+
+    res.status(200).json(Details);
+  } catch (error) {
+    console.error('Error fetching user by uniqueId:', error);
+    res.status(500).json({ message: 'An error occurred while fetching the user', error: error.message });
+  }
+};
+
+
+
+
+
+
+
 module.exports = {
   addcourse,
-  showallcourse
+  showallcourse,
+  fetchByUniqueId
 };
