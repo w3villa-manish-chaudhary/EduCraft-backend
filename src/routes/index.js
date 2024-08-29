@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-
 const hello = require('../controllers/index');
 const { createUser  } = require('../controllers/auth/signup');
 const { signin } = require('../controllers/auth/signin');
@@ -10,10 +9,8 @@ const otpVerify = require('../controllers/auth/otpVerify');
 const emailVerify = require('../controllers/auth/emailVerify');
 const authRoutes = require('./googleAuth');
 const courseRoutes = require('./courseRoute')
-
-
-
-
+const getProfile = require('../controllers/auth/getProfile');
+const tokenDecorator = require('../middlewares/auth.middleware');
 
 router.get('/', hello);
 router.post('/signup', createUser);
@@ -23,10 +20,7 @@ router.post('/otpverify', otpVerify);
 router.post('/emailverify', emailVerify);
 router.use('/auth', authRoutes);
 router.use('/course', courseRoutes);
-
-
-
-
+router.get('/user/profile', tokenDecorator, getProfile);
 
 module.exports = router;
 
