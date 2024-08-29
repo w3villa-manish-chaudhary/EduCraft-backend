@@ -4,19 +4,22 @@ const getProfile = async (req, res) => {
   try {
     const userId = req.user.uniqueId; 
 
-    console.log("::::::::::::::::", userId);
+    // console.log("::::::::::::::::", userId);
 
 
     const user = (await Users.findOne({
-      where: { uniqueId: userId }
+      where: { uniqueId: userId },
+      attributes: ['uniqueId', 'name', 'mobileNumber' , 'email'] 
+      }));
+
      
-    }));
+ 
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    console.log("::::::::::::::::>>>>>>>>>>>", user);
+    console.log("::::::::::::::::>>>>>>>>>>>", user.dataValues);
 
 
  

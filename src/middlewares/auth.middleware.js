@@ -10,7 +10,7 @@ const tokenDecorator = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, secretKey);
     req.user = decoded;
-    console.log(req.user);
+    // console.log(req.user);
 
     next();
   } catch (err) {
