@@ -58,10 +58,10 @@ exports.createUser = async (req, res) => {
             timestamp
         }, QueryTypes.INSERT);
 
-        const token = jwt.sign({ uniqueId }, JWT_SECRET_KEY, { expiresIn: '1h' });
+        const token = jwt.sign({ uniqueId , email }, JWT_SECRET_KEY, { expiresIn: '24h' });
 
-        //Send OTP
-        // await sendOTP(phone, otp);
+        // Send OTP
+        await sendOTP(phone, otp);
 
 
         // Send  email

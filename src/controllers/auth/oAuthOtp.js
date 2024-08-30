@@ -3,6 +3,8 @@ const { otpQuery , updateMobileNumberQuery } = require('../../config/nativeQuery
 const { QueryTypes } = require('sequelize');
 const { executeRawQuery, sequelize } = require('../../database/dbconfig');
 const { v4: uuidv4 } = require('uuid');
+const Users  = require('../../database/models/user.model');
+
 
 const oauthotpsend = async (req, res, next) => {
   try {
@@ -12,7 +14,7 @@ const oauthotpsend = async (req, res, next) => {
     const otp = generateOTP();
 
     
-    // await sendOTP(phone, otp);
+    await sendOTP(phone, otp);
 
     const now = Date.now();
     const otpCreatedAt = now;
@@ -35,6 +37,15 @@ const oauthotpsend = async (req, res, next) => {
       replacements: { mobileNumber: phone },
       type: QueryTypes.UPDATE
     });
+
+
+
+    const user = await Users.findOne({
+      where: { mobileNumber: phone  }
+    });
+
+    console.log(">>>>>>>><<<<<<<<<<", user);
+    
 
     return res.status(200).json({ message: 'OTP sent successfully.' });
   } catch (error) {

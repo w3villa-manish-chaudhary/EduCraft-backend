@@ -25,7 +25,7 @@ const makepayments = async (req, res) => {
             payment_method_types: ["card"],
             line_items: lineItems,
             mode: "payment",
-            success_url: `${process.env.FRONTEND_URL}/showallcourse`, 
+            success_url: `${process.env.FRONTEND_URL}/courses`, 
             cancel_url: `${process.env.FRONTEND_URL}/paymentfailed`,
         });
 
