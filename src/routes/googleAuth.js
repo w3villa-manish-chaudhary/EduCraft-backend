@@ -31,12 +31,17 @@ router.get('/google/callback',
 
 
 
+
+
 // Success 
-router.get('/success', googleAuth.successGoogleLogin);
+router.get('/success', googleAuth.successGoogleGitHubLogin);
 
 
 // failure 
-router.get('/failure', googleAuth.failureGoogleLogin);
+router.get('/failure', googleAuth.failureGoogleGitHubLogin);
+
+
+router.get('/login/success' , googleAuth.oAuthLoginSuccess )
 
 
 
