@@ -48,7 +48,6 @@ const addcourse = async (req, res) => {
 
 const showallcourse = async (req, res) => {
   try {
-    console.log("::::::::::::::::::::::::::::::>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<",req.user);
 
 
 
@@ -58,7 +57,6 @@ const showallcourse = async (req, res) => {
     res.status(200).json({
       message: 'Courses retrieved successfully!',
       data: courses, 
-      user: req.user
     });
   } catch (error) {
     res.status(500).json({
