@@ -25,7 +25,7 @@ app.use(passport.session());
 
 // CORS configuration
 app.use(cors({
-    origin: "https://deployment--educraft01.netlify.app/", 
+    origin: "https://educraft01.netlify.app/login", 
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true 
 }));
