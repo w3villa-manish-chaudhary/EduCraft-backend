@@ -28,30 +28,22 @@ router.get('/failure', googleAuth.failureGoogleGitHubLogin);
 router.get('/login/success', googleAuth.oAuthLoginSuccess);
 
 router.post('/oauthotpsend', oauthotpsend);
-router.get('/logout', async (req, res) => {
-  console.log(":::::::::::>>>>>>> I am in logout <<<<<<<<<<<");
+router.get('/logout', (req, res) => {
+  console.log(":::::::::::>>>>>>> i am in logout <<<<<<<<<<<");
 
-  try {
-    await req.logout();
+  req.logout((err) => {
+    if (err) {
+      return res.status(500).json({ message: 'Logout failed' });
+    }
+
     req.session.destroy((err) => {
       if (err) {
-        return res.status(500).json({ message: 'Session destruction failed' });
+        return res.status(500).json({ message: 'Logout failed' });
       }
 
-      res.clearCookie('connect.sid', {
-        path: '/',
-        httpOnly: true,
-        secure: true,
-        sameSite: 'None'
-      });
-
-      res.redirect('/');
+      res.clearCookie('connect.sid');
+      res.status(200).json({ message: 'Logout successful' });
     });
-  } catch (err) {
-    res.status(500).json({ message: 'Logout failed' });
-  }
+  });
 });
-
-
 module.exports = router;
-
