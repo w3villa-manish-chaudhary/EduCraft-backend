@@ -12,7 +12,6 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 
-const URL = process.env.FRONTEND_URL
 
 app.use(session({
     secret: 'zxcvbnmasdfghjkl',
@@ -25,7 +24,7 @@ app.use(passport.session());
 
 // CORS configuration
 app.use(cors({
-    origin: "https://educraft01.netlify.app/", 
+    origin: '*', 
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true 
 }));
