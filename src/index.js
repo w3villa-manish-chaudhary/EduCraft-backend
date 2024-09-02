@@ -12,6 +12,8 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 
+const URL = process.env.FRONTEND_URL
+
 app.use(session({
     secret: 'zxcvbnmasdfghjkl',
     resave: false,
@@ -23,7 +25,7 @@ app.use(passport.session());
 
 // CORS configuration
 app.use(cors({
-    origin: process.env.FRONTEND_URL, 
+    origin: URL, 
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true 
 }));
