@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config(); // Load environment variables
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
@@ -11,27 +11,36 @@ require('./config/passport');
 const app = express();
 const PORT = process.env.PORT || 8000;
 
+const URL = process.env.FRONTEND_URL;
 
-app.use(session({
-    secret: 'zxcvbnmasdfghjkl',
-    resave: false,
-    saveUninitialized: true,
-}));
-
-app.use(passport.initialize());
-app.use(passport.session());
-
-// CORS configuration
 app.use(cors({
-    origin: process.env.FRONTEND_URL, 
+    origin: '*', 
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true 
 }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(morgan('dev'));
+app.use(morgan('dev')); 
 
-initializeDatabase();
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'defaultsecret', 
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true, 
+        sameSite: 'lax'
+    }
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+initializeDatabase().catch(error => {
+    console.error("Failed to initialize database:", error);
+    process.exit(1); 
+});
 
 app.use("/", routes);
 
