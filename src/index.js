@@ -11,11 +11,15 @@ require('./config/passport');
 const app = express();
 const PORT = process.env.PORT || 8000;
 
+const URL = process.env.FRONTEND_URL;
 
 
-app.use(cors());
 
 
+app.use(cors({
+    origin: URL,
+    credentials: true 
+  }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev')); 
