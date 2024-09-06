@@ -17,7 +17,7 @@ const URL = process.env.FRONTEND_URL;
 
 
 app.use(cors({
-    origin: URL,
+    origin: "*",
     credentials: true 
   }));
 app.use(express.json());

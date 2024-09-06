@@ -12,6 +12,7 @@ const courseRoutes = require('./courseRoute')
 const profileRoutes = require('./profileRoute')
 const getProfile = require('../controllers/auth/getProfile');
 const tokenDecorator = require('../middlewares/auth.middleware');
+const kivoOauth = require('./kivoOauth')
 
 router.get('/', hello);
 router.post('/signup', createUser);
@@ -23,6 +24,7 @@ router.use('/auth', authRoutes);
 router.use('/course', courseRoutes);
 router.use('/profile', tokenDecorator, profileRoutes);
 router.get('/user/profile', tokenDecorator, getProfile);
+router.use('/', kivoOauth )
 
 module.exports = router;
 
